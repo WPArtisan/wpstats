@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+	<title>View your WordPress.org Plugin Stats</title>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=Edge">
 	<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -16,7 +17,7 @@
 
 		<div class="center tc">
 			<h1 class="f1 fw3 lh-title white mv2">WordPress.org Download Stats</h1>
-			<h3 class="f4 fw3 lh-subtitle black-80 mt2 mb4">Enter a plugin or theme slug to view the download stats</h3>
+			<h3 class="f4 fw3 lh-subtitle black-80 mt2 mb4">Enter a plugin slug to view the download stats</h3>
 			<form id="search-form">
 				<input id="search-input" type="text" placeholder="e.g. jetpack" class="input-reset pv3 b1 b--black-60 o0 ph3 br2 w80 w-60-ns f4 fw3 black-80" value=""/>
 			</form>
@@ -36,6 +37,19 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.1.0/backbone-min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
 
+	<script type="text/template" id="plugin-waiting">
+		<div class="plugin-waiting-wrap w-80 center tc">
+			<h4 class="f4 fw3 black-80">Enter your plugin slug in the input above and hit return.</h4>
+		</div>
+	</script>
+
+	<script type="text/template" id="plugin-missing">
+		<div class="plugin-missing-wrap w-80 center tc">
+			<h2 class="f2 fw3 blue">Plugin Not Found</h2>
+			<h4 class="f4 fw3 black-80">No plugin exists for that slug. If you've just uploaded it try again in a day or so.</h4>
+		</div>
+	</script>
+
 	<script>
 		Chart.defaults.global.maintainAspectRatio = false;
 		Chart.defaults.global.scaleLabel = "<%=parseInt(value).toLocaleString()%>";
@@ -43,7 +57,9 @@
 
 		$( '#search-form' ).on( 'submit', function() {
 			var search_slug = $( '#search-input' ).val();
-			app_router.navigate( 'plugin/' + search_slug, true );
+			if ( search_slug.length > 0 ) {
+				app_router.navigate( 'plugin/' + search_slug, true );
+			}
 		});
 
 		var AppRouter = Backbone.Router.extend({
@@ -139,22 +155,12 @@
 		});
 
 		app_router.on('route:defaultRoute', function(actions) {
-			alert(actions);
+			var template = _.template( $( '#plugin-waiting' ).html() );
+			$( '.plugin' ).html( template );
 		});
 
 		// Start Backbone history a necessary step for bookmarkable URL's
 		Backbone.history.start();
-	</script>
-
-	<script type="text/template" id="plugin-details">
-		<h2 class="f3 fw4"><% plugin.title %></h2>
-	</script>
-
-	<script type="text/template" id="plugin-missing">
-		<div class="plugin-missing-wrap w-80 center tc">
-			<h2 class="f2 fw3 blue">Plugin Not Found</h2>
-			<h4 class="f4 fw3 black-80">No plugin exists for that slug. If you've just uploaded it try again in a day or so.</h4>
-		</div>
 	</script>
 
 	<script>
