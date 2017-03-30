@@ -13,47 +13,87 @@
 </head>
 <body>
 
-	<div class="w-100 bg-light-red pa5">
+	<div class="w-100 bg-light-red pt2 pb4 ph3 pa5-ns">
 
 		<div class="center tc">
-			<h1 class="f1 fw3 lh-title white mv2">WordPress.org Download Stats</h1>
-			<h3 class="f4 fw3 lh-subtitle black-80 mt2 mb4">Enter a plugin slug to view the download stats</h3>
+			<h1 class="f2 f1-ns fw3 lh-title white mv3 mv2-ns">WordPress.org Download Stats</h1>
+			<h3 class="f5 f4-ns fw3 lh-subtitle black-80 mt2 mb4">Enter a plugin slug to view the download stats</h3>
 			<form id="search-form">
-				<input id="search-input" type="text" placeholder="e.g. jetpack" class="input-reset pv3 b1 b--black-60 o0 ph3 br2 w80 w-60-ns f4 fw3 black-80" value=""/>
+				<input id="search-input" type="text" placeholder="e.g. jetpack" class="input-reset pv3 b1 b--black-60 o0 ph3 br2 w-100 w-60-ns f4 fw3 black-80" value=""/>
 			</form>
 		</div>
 
 	</div>
 
-	<div class="plugin pv3"></div>
+	<div class="plugin pv3">
+
+	</div>
 
 	<div class="chart-container w-80 center mb4">
 		<canvas id="chart" class="" width="100%" height="100%"></canvas>
 	</div>
 
 
+	<div class="pv3 tc lh-copy black-80 fw3">
+		<p class="">Submit any issues or pull requests directly to the <a class="blue" target="_blank" href="https://github.com/WPArtisan/wpstats">GitHub repository</a>.<p>
+		<p class="f6">A <a class="blue" target="_blank" href="https://wpartisan.me">WPArtisan.me</a> project.<p>
+	</div>
+
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.1.0/backbone-min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+
+	<script type="text/template" id="plugin-details">
+		<div class="plugin-details-wrap w-80 center mb1">
+			<h4 class="f2 fw3 black-80 lh-copy tc">
+				<%= plugin.name %>
+			</h4>
+
+			<div class="center">
+				<div class="cf f6">
+					<div class="fl w-100 w-20-ns">
+						<div class=""><strong>Downloads:</strong> <%= plugin.downloaded.toLocaleString() %></div>
+					</div>
+					<div class="fl w-100 w-20-ns">
+						<div class=""><strong>Active Install:</strong> <%= plugin.active_installs.toLocaleString() %>+</div>
+					</div>
+					<div class="fl w-100 w-20-ns">
+						<div class=""><strong>Version:</strong> <%= plugin.version %></div>
+					</div>
+					<div class="fl w-100 w-20-ns">
+						<div class=""><strong>Last Updated:</strong> <%= moment( plugin.last_updated, 'YYYY-MM-DD' ).fromNow() %></div>
+					</div>
+					<div class="fl w-100 w-20-ns">
+						<div class=""><strong>Author:</strong> <%= plugin.author.replace( 'href', 'class="blue" target="_blank" href' ) %></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</script>
 
 	<script type="text/template" id="plugin-waiting">
 		<div class="plugin-waiting-wrap w-80 center tc">
-			<h4 class="f4 fw3 black-80">Enter your plugin slug in the input above and hit return.</h4>
+			<h4 class="f4 fw3 black-80 lh-copy">Enter your plugin slug in the input above and hit return.</h4>
 		</div>
 	</script>
 
 	<script type="text/template" id="plugin-missing">
 		<div class="plugin-missing-wrap w-80 center tc">
 			<h2 class="f2 fw3 blue">Plugin Not Found</h2>
-			<h4 class="f4 fw3 black-80">No plugin exists for that slug. If you've just uploaded it try again in a day or so.</h4>
+			<h4 class="f4 fw3 black-80 lh-copy">No plugin exists for that slug. If you've just uploaded it try again in a day or so.</h4>
 		</div>
 	</script>
 
 	<script>
+	function test( r ) {
+		alert('tes');
+		console.log(r);
+	}
+
 		Chart.defaults.global.maintainAspectRatio = false;
 		Chart.defaults.global.scaleLabel = "<%=parseInt(value).toLocaleString()%>";
-
 
 		$( '#search-form' ).on( 'submit', function() {
 			var search_slug = $( '#search-input' ).val();
@@ -75,19 +115,18 @@
 
 			$( '#search-input' ).val( slug );
 
-			// $.ajax({
-			// 	url: 'https://api.wordpress.org/plugins/info/1.0/' + slug + '.json',
-			// 	type: "GET",
-			// 	cache: false,
-			// 	dataType: "jsonp",
-			// 	success : function(response) {
-			// 		// console.log( response );
-			// 		var template = _.template( $( '#plugin-details' ).html(), { plugin: { title: "test" } } );
-			// 		$( '.plugin' ).html( template );
-			// 	}
-			// });
 
 
+			$.ajax({
+				url: 'https://wordpress.org/plugins/wp-json/plugins/v1/plugin/' + slug,
+				type: 'GET',
+				cache: false,
+				dataType: 'json',
+				success : function(response) {
+					var template = _.template( $( '#plugin-details' ).html(), { plugin: response } );
+					$( '.plugin' ).html( template );
+				}
+			});
 
 			$.ajax({
 				url: 'https://api.wordpress.org/stats/plugin/1.0/downloads.php?slug=' + slug + '&limit=30',
