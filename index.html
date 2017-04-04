@@ -97,7 +97,7 @@
 				</tr>
 				<tr>
 					<td class="b">Last Updated:</td>
-					<td><%= moment( plugin.last_updated, 'YYYY-MM-DD' ).fromNow() %></td>
+					<td><%= moment.utc( plugin.last_updated, 'YYYY-MM-DD HH:mma' ).fromNow() %></td>
 				</tr>
 				<tr>
 					<td class="b">Author:</td>
