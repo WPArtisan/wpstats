@@ -54,9 +54,12 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
 
 	<script type="text/template" id="plugin-title">
-		<h4 class="f2 fw3 black-80 lh-copy tc">
-			<%= plugin.name %>
-		</h4>
+	  <h4 class="mb0 f2 fw3 black-80 lh-copy tc">
+	    <%= plugin.name %>
+	  </h4>
+	  <div class="tc fw3 mb5">
+	    <p class="mt0">View in the <a class="blue" target="_blank" href="https://wordpress.org/plugins/<%= plugin.slug %>">WordPress Plugin Repository</a>.</p>
+	  </div>
 	</script>
 
 	<script type="text/template" id="plugin-historical-summary">
