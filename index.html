@@ -28,7 +28,7 @@
 	<div class="plugin pv3 w-80 center">
 		<div class="plugin-title-wrap"></div>
 		<div class="cf f6">
-			<div class="fl w-100 w-50-ns">
+			<div class="fl w-100 w-50-ns mb4 mb0-ns">
 				<div class="plugin-historical-summary-wrap w-80 center mb1"></div>
 			</div>
 			<div class="fl w-100 w-50-ns">
@@ -47,7 +47,7 @@
 		<p class="f6">A <a class="blue" target="_blank" href="https://wpartisan.me">WPArtisan.me</a> project | Checkout our <a class="blue" href="https://wp-native-articles.com">WordPress Facebook Instant Articles</a> plugin<p>
 	</div>
 
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.1.0/backbone-min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
@@ -63,7 +63,7 @@
 	</script>
 
 	<script type="text/template" id="plugin-historical-summary">
-		<h4 class="f3 fw4 mt0">Downloads</h4>
+		<h4 class="f3 fw4 mt0 mb3">Downloads</h4>
 		<table class="f6 w-100 mw8 center" cellspacing="0">
 			<tbody class="lh-copy">
 				<tr>
@@ -87,8 +87,8 @@
 	</script>
 
 	<script type="text/template" id="plugin-details">
-		<h4 class="f3 fw4  mt0">Details</h4>
-		<table class="f6 w-100 mw8 center" cellspacing="0">
+		<h4 class="f3 fw4 mt0 mb3">Details</h4>
+		<table class="f6 w-100 mw8 center mb3 mb0-ns" cellspacing="0">
 			<tbody class="lh-copy">
 				<tr>
 					<td class="b">Active Install:</td>
@@ -176,6 +176,8 @@
 					download_summary();
 					plugin_chart();
 
+					$( '.plugin-waiting-wrap' ).remove();
+
 					var template = _.template( $( '#plugin-title' ).html(), { plugin: response } );
 					$( '.plugin .plugin-title-wrap' ).html( template );
 					var template = _.template( $( '#plugin-details' ).html(), { plugin: response } );
@@ -252,7 +254,7 @@
 
 		app_router.on('route:defaultRoute', function(actions) {
 			var template = _.template( $( '#plugin-waiting' ).html() );
-			$( '.plugin' ).html( template );
+			$( '.plugin' ).prepend( template );
 		});
 
 		// Start Backbone history a necessary step for bookmarkable URL's
